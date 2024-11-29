@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+from typing import Union
+
 from itertools import product
 
 import torch
@@ -242,7 +244,7 @@ class InferenceModel(nn.Module):
         self.eval()
 
     @staticmethod
-    def from_config(config: dict or str) -> InferenceModel:
+    def from_config(config: Union[dict, str]) -> InferenceModel:
         """
         Initializes the inference model from a config.
         """

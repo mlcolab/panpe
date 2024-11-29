@@ -1,17 +1,22 @@
 # panpe-reflectometry
 ## Deep learning for Bayesian reflectometry analysis
 
-Code for the manuscript **"Fast and Reliable Probabilistic Reflectometry Inversion with Prior-Amortized Neural Posterior Estimation"** by
-Vladimir Starostin<sup>a</sup>,
+Code for the manuscript 
+
+**Fast and Reliable Probabilistic Reflectometry Inversion with Prior-Amortized Neural Posterior Estimation** 
+
+by Vladimir Starostin<sup>a</sup>,
 Maximilian Dax<sup>b</sup>,
 Alexander Gerlach<sup>a</sup>, 
 Alexander Hinderhofer<sup>a</sup>, 
 Álvaro Tejero-Cantero<sup>a</sup>, 
-and Frank Schreiber<sup>a</sup> (submitted).
+and Frank Schreiber<sup>a</sup>.
 
 
 *[a] University of Tübingen, 72076 Tübingen, Germany*  
 *[b] Max Planck Institute for Intelligent Systems, 72076 Tübingen, Germany*
+
+(under review)
 
 ### Installation
 

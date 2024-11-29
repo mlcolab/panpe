@@ -1,0 +1,77 @@
+general:
+  name: panpe-2layers-xrr
+  root_dir: null
+  device: cuda
+simulator:
+  num_layers: 2
+  hyperprior:
+    cls: HyperpriorForUniformPriorsWithConstrainedRoughness
+    kwargs:
+      thickness_range: [0., 500.]
+      roughness_range: [0., 50.]
+      sld_range: [0., 60.]
+      q_offset_range: [-0.002, 0.002]
+      r_scale_range: [0.95, 1.05]
+      coef: 0.5
+      width_distribution: 'uniform'
+      max_widths: [ 0.4, 0.4, 1., 1., 1., 0.167, 0.167, 0.167, 1., 1. ]
+  q_simulator:
+    cls: RandomQSimulator
+    kwargs:
+      q_range: [0.001, 0.15]
+      max_q_num: 64
+      drop_range: [0.0, 0.7]
+  measurement_noise:
+    cls: NormalNoiseSimulator
+    kwargs:
+      rel_sigma_range: [0.1, 0.3]
+  physical_model:
+    cls: BasicLayerStructureModel
+    kwargs:
+      enable_q_misalignment: true
+      enable_r_misalignment: true
+      enable_background: false
+nn:
+  embedding_net:
+    cls: EmbeddingNN
+    pretrained_name: null
+    kwargs:
+       z_num: [16, 32, 64 ]
+       z_range: [ 0., 0.16 ]
+       latent_dim: 256
+       num_blocks: 4
+       kernel_coef: 16
+       use_layer_norm: true
+  flow:
+    num_layers: 40
+    use_batch_norm_transform: true
+    transform_net:
+      context_features: 256
+      hidden_features: 256
+      num_blocks: 3
+      use_layer_norm: true
+training:
+  num_iterations: 300000
+  batch_size: 8192
+  lr: 1.0e-5
+  update_tqdm_freq: 1
+  grad_accumulation_steps: 1
+  optimizer: AdamW
+
+  callbacks:
+    save_best_model:
+      enable: true
+      freq: 500
+    lr_scheduler:
+      cls: StepLR
+      kwargs:
+          step_size: 50000
+          gamma: 0.5
+          last_epoch: 200000
+    lr_warmup:
+      cls: WarmupLR
+      kwargs:
+        start_lr: 1.0e-5
+        end_lr: 2.0e-4
+        warmup_steps: 2000
+        logscale: true

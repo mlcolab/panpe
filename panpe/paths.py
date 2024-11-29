@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+from typing import Union
+
 from pathlib import Path
 
 __all__ = [
@@ -25,7 +27,7 @@ CONFIG_DIR: Path = ROOT_DIR / "configs"
 
 
 def listdir(
-    path: Path or str,
+    path: Union[Path, str],
     pattern: str = "*",
     recursive: bool = False,
     *,

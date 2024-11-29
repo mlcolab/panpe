@@ -5,19 +5,28 @@ build-backend = "hatchling.build"
 [project]
 name = "panpe"
 dynamic = ["version"]
-description = "{description}"  # Will be read from package_info.py
+description = "Prior-Amortized Neural Posterior Estimation for Bayesian Reflectometry Analysis"
 authors = [
-    {name = "{author}", email = "{email}"}  # Will be read from package_info.py
+    {name = "Vladimir Starostin", email = "vladimir.starostin@uni-tuebingen.de"}
 ]
 readme = "README.md"
 requires-python = ">=3.8"
 license = {file = "LICENSE.txt"}
-classifiers = []  # Will be read from package_info.py
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
 dependencies = [
     "numpy>=1.26.0",
     "scipy>=1.11.3",
     "torch>=2.1.0",
-    "nflows>=0.14.*",
+    "nflows>=0.14",
     "tqdm",
     "PyYAML",
     "click",
@@ -31,6 +40,7 @@ panpe_train = "panpe:train"
 
 [tool.hatch.version]
 path = "panpe/package_info.py"
+pattern = "__version__ = \"(?P<version>[^\"]+)\""
 
 [tool.pytest.ini_options]
 filterwarnings = [

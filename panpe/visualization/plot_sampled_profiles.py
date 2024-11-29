@@ -4,6 +4,10 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+from __future__ import annotations
+
+from typing import Union, Optional
+
 import torch
 from torch import Tensor
 
@@ -19,10 +23,10 @@ def plot_sampled_profiles(
     data: MeasuredData,
     thetas: Tensor,
     physical_model: PhysicalModel,
-    prior_thetas: Tensor = None,
-    used_theta: Tensor = None,
-    q: Tensor or tuple[float, float, int] or tuple[float, float] or float = None,
-    z: Tensor or tuple[float, float, int] or tuple[float, float] or float = None,
+    prior_thetas: Optional[Tensor] = None,
+    used_theta: Optional[Tensor] = None,
+    q: Union[Tensor, tuple[float, float, int], tuple[float, float], float, None] = None,
+    z: Union[Tensor, tuple[float, float, int], tuple[float, float], float, None] = None,
     figsize: tuple = (15, 5),
     data_color: str = "m",
     data_lw: float = 2,
@@ -156,7 +160,7 @@ def plot_sampled_profiles(
 
 
 def _process_q_argument(
-    q: Tensor or tuple[float, float, int] or tuple[float, float] or float,
+    q: Union[Tensor, tuple[float, float, int], tuple[float, float], float],
     default_size: int = 1000,
 ) -> Tensor:
     """
@@ -178,7 +182,7 @@ def _process_q_argument(
 
 
 def _process_z_argument(
-    z: Tensor or tuple[float, float, int] or tuple[float, float] or None,
+    z: Union[Tensor, tuple[float, float, int], tuple[float, float]],
     default_size: int = 1000,
 ):
     """

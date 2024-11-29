@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+from typing import Optional, Union
+
 from math import log
 
 import torch
@@ -33,7 +35,7 @@ class PhysicalModel(nn.Module):
         raise NotImplementedError
 
     def get_sld_profiles(
-        self, theta: Tensor, z: Tensor = None
+        self, theta: Tensor, z: Optional[Tensor] = None
     ) -> tuple[Tensor, Tensor]:
         raise NotImplementedError
 
@@ -43,15 +45,15 @@ class PhysicalModel(nn.Module):
         raise NotImplementedError
 
     @property
-    def q_offset_idx(self) -> int or None:
+    def q_offset_idx(self) -> Optional[int]:
         raise NotImplementedError
 
     @property
-    def r_scale_idx(self) -> int or None:
+    def r_scale_idx(self) -> Optional[int]:
         raise NotImplementedError
 
     @property
-    def log_bkg_idx(self) -> int or None:
+    def log_bkg_idx(self) -> Optional[int]:
         raise NotImplementedError
 
     @property
@@ -119,11 +121,11 @@ class BasicLayerStructureModel(PhysicalModel):
         return params
 
     @property
-    def q_offset_idx(self) -> int or None:
+    def q_offset_idx(self) -> Optional[int]:
         return 3 * self.num_layers + 2 if self.use_dq_misalignment else None
 
     @property
-    def r_scale_idx(self) -> int or None:
+    def r_scale_idx(self) -> Optional[int]:
         if not self.use_dr_misalignment:
             return None
         idx = 3 * self.num_layers + 2
@@ -132,7 +134,7 @@ class BasicLayerStructureModel(PhysicalModel):
         return idx
 
     @property
-    def log_bkg_idx(self) -> int or None:
+    def log_bkg_idx(self) -> Optional[int]:
         if not self.use_background:
             return None
         idx = 3 * self.num_layers + 2

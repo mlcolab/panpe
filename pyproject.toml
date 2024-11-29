@@ -46,7 +46,7 @@ pattern = "__version__ = \"(?P<version>[^\"]+)\""
 filterwarnings = [
     "ignore::DeprecationWarning",
 ]
-addopts = "--doctest-modules --doctest-ignore-import-errors panpe tests/functional"
+addopts = "--doctest-modules --doctest-ignore-import-errors panpe tests"
 doctest_optionflags = "NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL NUMBER"
 
 [tool.hatch.build.targets.wheel]

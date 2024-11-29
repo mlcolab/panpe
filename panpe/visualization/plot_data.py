@@ -16,7 +16,7 @@ def plot_data(
         yerr=data.sigmas.squeeze().cpu().numpy(),
         color=color,
         lw=lw,
-        **kwargs
+        **kwargs,
     )
 
     plt.grid()

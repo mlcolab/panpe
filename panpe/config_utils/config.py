@@ -29,7 +29,7 @@ def load_config(config_name: Union[str, Path]) -> dict:
 
 def update_device_if_needed(config: dict):
     """
-    Check whether the current pytorch installation supports cuda. 
+    Check whether the current pytorch installation supports cuda.
     If not, set the device to cpu.
     """
     if not torch.cuda.is_available():

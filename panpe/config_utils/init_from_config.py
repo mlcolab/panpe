@@ -121,10 +121,10 @@ def init_flow_from_config(
         phi_dim=phi_dim,
     )
     embedding_net = _load_pretrained_model(
-        embedding_net, 
-        embedding_net_conf.get("pretrained_name", None), 
-        folder_paths["saved_models"], 
-        device
+        embedding_net,
+        embedding_net_conf.get("pretrained_name", None),
+        folder_paths["saved_models"],
+        device,
     )
 
     flow_config = nn_config["flow"]
@@ -141,7 +141,9 @@ def init_flow_from_config(
     model_weights_loaded: bool = False
 
     if pretrained_name:
-        _load_pretrained_model(flow, pretrained_name, folder_paths["saved_models"], device)
+        _load_pretrained_model(
+            flow, pretrained_name, folder_paths["saved_models"], device
+        )
         model_weights_loaded = True
     try:
         # try to load from the saved_models dir with the same name as the config
@@ -348,7 +350,9 @@ def _load_pretrained_model(
     try:
         pretrained = torch.load(model_path, map_location=device, weights_only=False)
     except Exception as err:
-        raise RuntimeError(f"Could not load model from {str(model_path)}. Error: {err}") from err
+        raise RuntimeError(
+            f"Could not load model from {str(model_path)}. Error: {err}"
+        ) from err
     if "model" in pretrained:
         pretrained = pretrained["model"]
     try:

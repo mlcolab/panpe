@@ -14,11 +14,13 @@ def inference_model(config):
     """Session-scoped fixture for the inference model."""
     return InferenceModel.from_config(config)
 
+
 @pytest.fixture(scope="session")
 def inference_kwargs(config):
     """Session-scoped fixture for the inference kwargs for testing purposes.
-    It is not used in the actual inference pipeline, but it accelerates the testing process."""
-    kwargs = dict(target_neff=100 if config["general"]["device"] == "cuda" else 10)
+    It is not used in the actual inference pipeline, but it accelerates the testing process.
+    """
+    kwargs = dict(target_neff=500 if config["general"]["device"] == "cuda" else 100)
     return kwargs
 
 
@@ -26,4 +28,4 @@ def inference_kwargs(config):
 def exp_dataset(config):
     """Session-scoped fixture for the experimental dataset."""
     device = config["general"]["device"]
-    return ExpDataset(ROOT_DIR / "data/xrr_data.h5", device=device) 
+    return ExpDataset(ROOT_DIR / "data/xrr_data.h5", device=device)

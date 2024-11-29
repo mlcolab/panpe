@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+from typing import Union
+
 import torch
 from torch import Tensor
 
@@ -20,7 +22,7 @@ class BoxUniform(Distribution):
     Box uniform distribution.
     """
 
-    def __init__(self, low: list or Tensor, high: list or Tensor):
+    def __init__(self, low: Union[list, Tensor], high: Union[list, Tensor]):
         super().__init__()
         self.register_buffer("low", torch.as_tensor(low))
         self.register_buffer("high", torch.as_tensor(high))
@@ -59,7 +61,7 @@ class TruncatedExponential(Distribution):
     It assumes that the parameter dimension is the last one, and lam parameter is shared among them.
     """
 
-    def __init__(self, ndim: int, lam: float or Tensor = 0.05):
+    def __init__(self, ndim: int, lam: Union[float, Tensor] = 0.05):
         super().__init__()
         self.register_buffer("ndim", torch.as_tensor(ndim))
         self.register_buffer("lam", torch.as_tensor(lam))
@@ -156,7 +158,7 @@ class MixtureWidthSampler(Distribution):
 
 
 def truncated_exponential_sampler(
-    lam: float or Tensor,
+    lam: Union[float, Tensor],
     *shape,
     device: str = "cpu",
     dtype: torch.dtype = torch.float32,
@@ -171,11 +173,11 @@ def truncated_exponential_sampler(
     >>> gen = torch.Generator().manual_seed(0)
 
     # when lam is small, it is indistinguishable from the usual exponential distribution:
-    >>> stats.kstest(truncated_exponential_sampler(1e-5, 10000, generator=gen) * 1e5, stats.expon.cdf).pvalue > 0.05
+    >>> bool(stats.kstest(truncated_exponential_sampler(1e-5, 10000, generator=gen) * 1e5, stats.expon.cdf).pvalue > 0.05)
     True
 
     # when lam is large, it is indistinguishable from the uniform distribution:
-    >>> stats.kstest(truncated_exponential_sampler(1e5, 10000, generator=gen), stats.uniform.cdf).pvalue > 0.05
+    >>> bool(stats.kstest(truncated_exponential_sampler(1e5, 10000, generator=gen), stats.uniform.cdf).pvalue > 0.05)
     True
     """
 
@@ -219,19 +221,19 @@ def default_width_sampler(
 
         # when width is zero, it reduces to uniform distribution:
         >>> samples = default_width_sampler(10000, 1, weight=0, lam=1e-5, generator=gen).squeeze()
-        >>> stats.kstest(samples, stats.uniform.cdf).pvalue > 0.05
+        >>> bool(stats.kstest(samples, stats.uniform.cdf).pvalue > 0.05)
         True
 
         # when width is one, it reduces to truncated exponential distribution:
         >>> samples = default_width_sampler(10000, 1, weight=1, lam=1e-5, generator=gen).squeeze()
-        >>> stats.kstest(samples * 1e5, stats.expon.cdf).pvalue > 0.05
+        >>> bool(stats.kstest(samples * 1e5, stats.expon.cdf).pvalue > 0.05)
         True
 
         # mean of the distribution is close to the expected value:
         >>> lam = 0.2
         >>> expected_mean = (lam + 0.5) / 2
         >>> samples = default_width_sampler(10000, 1, weight=0.5, lam=lam, generator=gen).squeeze()
-        >>> abs(samples.mean().item() - expected_mean) < 1e-2
+        >>> bool(abs(samples.mean().item() - expected_mean) < 1e-2)
         True
 
     """

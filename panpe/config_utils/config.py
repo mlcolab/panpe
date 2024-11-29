@@ -6,23 +6,39 @@
 
 from __future__ import annotations
 
+from typing import Union
+
 from pathlib import Path
 import yaml
 import warnings
 
+import torch
+
 from panpe.paths import CONFIG_DIR
 
 
-def load_config(config_name: str or Path) -> dict:
+def load_config(config_name: Union[str, Path]) -> dict:
     path = find_config_path(config_name)
 
     with open(path, "r") as f:
         config = yaml.safe_load(f)
     config["config_path"] = path
+    config = update_device_if_needed(config)
     return config
 
 
-def find_config_path(config_name: str or Path) -> str:
+def update_device_if_needed(config: dict):
+    """
+    Check whether the current pytorch installation supports cuda. 
+    If not, set the device to cpu.
+    """
+    if not torch.cuda.is_available():
+        warnings.warn("CUDA is not available. Setting device to cpu.")
+        config["general"]["device"] = "cpu"
+    return config
+
+
+def find_config_path(config_name: Union[str, Path]) -> str:
     if isinstance(config_name, Path):
         return str(config_name.absolute())
     if not config_name.endswith(".yaml"):

@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+from typing import Union, Optional
+
 from pathlib import Path
 from functools import wraps
 
@@ -38,7 +40,7 @@ def load_config_if_needed(func):
     """
 
     @wraps(func)
-    def wrapper(config: dict or str, *args, **kwargs):
+    def wrapper(config: Union[dict, str], *args, **kwargs):
         if isinstance(config, str):
             config = load_config(config)
         return func(config, *args, **kwargs)
@@ -47,7 +49,7 @@ def load_config_if_needed(func):
 
 
 @load_config_if_needed
-def init_simulator_from_config(config: dict or str):
+def init_simulator_from_config(config: Union[dict, str]):
     """
     Initialize a simulator from a config.
     """
@@ -84,9 +86,9 @@ def init_simulator_from_config(config: dict or str):
 
 @load_config_if_needed
 def init_flow_from_config(
-    config: dict or str,
-    saved_models_dir: Path = None,
-    simulator: simulator_module.Simulator = None,
+    config: Union[dict, str],
+    saved_models_dir: Optional[Path] = None,
+    simulator: Optional[simulator_module.Simulator] = None,
 ):
     """
     Initialize a flow from a config.
@@ -146,7 +148,7 @@ def init_flow_from_config(
 
 
 @load_config_if_needed
-def init_trainer_from_config(config: dict or str) -> training_module.Trainer:
+def init_trainer_from_config(config: Union[dict, str]) -> training_module.Trainer:
     """
     Initialize a trainer from a config.
     """
@@ -177,7 +179,7 @@ def init_trainer_from_config(config: dict or str) -> training_module.Trainer:
 
 @load_config_if_needed
 def init_inference_model_from_config(
-    config: dict or str,
+    config: Union[dict, str],
 ) -> inference_module.InferenceModel:
     """
     Initialize an inference model from a config.
@@ -195,7 +197,7 @@ def init_inference_model_from_config(
 
 
 @load_config_if_needed
-def run_training_from_config(config: dict or str):
+def run_training_from_config(config: Union[dict, str]):
     """
     Run training from a config.
     """
@@ -246,7 +248,7 @@ def _instance_from_conf(conf, module, **kwargs):
     return cls(*conf_args, **conf_kwargs)
 
 
-def get_paths_from_config(config: dict, mkdir: bool = False):
+def get_paths_from_config(config: dict, mkdir: bool = False) -> dict:
     """
     Get paths from a config.
     """
@@ -277,7 +279,7 @@ def get_paths_from_config(config: dict, mkdir: bool = False):
 
 
 def init_callbacks_from_config(
-    config: dict, folder_paths: dict = None
+    config: dict, folder_paths: Optional[dict] = None
 ) -> tuple["TrainerCallback", ...]:
     """
     Initialize training callbacks from a config.

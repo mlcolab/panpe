@@ -1,4 +1,3 @@
-
 # panpe-reflectometry
 ## Deep learning for Bayesian reflectometry analysis
 
@@ -35,7 +34,18 @@ The following dependencies are required and will be installed automatically:
 - matplotlib
 - h5py
 
-### Training
+### Testing installation
+
+To test the installation, run the following command in the root directory:
+
+```bash
+pytest
+```
+
+This will execute all tests, including doctests in the `panpe` package and tests in the `tests/functional` directory.
+
+
+### Training from scratch
 
 The `panpe-2layers-xrr` model for XRR data is provided with the package. 
 To train an additional model, run the following command:

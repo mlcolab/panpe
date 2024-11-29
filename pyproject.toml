@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "panpe"
+dynamic = ["version"]
+description = "{description}"  # Will be read from package_info.py
+authors = [
+    {name = "{author}", email = "{email}"}  # Will be read from package_info.py
+]
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE.txt"}
+classifiers = []  # Will be read from package_info.py
+dependencies = [
+    "numpy>=1.26.0",
+    "scipy>=1.11.3",
+    "torch>=2.1.0",
+    "nflows>=0.14.*",
+    "tqdm",
+    "PyYAML",
+    "click",
+    "pytest",
+    "matplotlib",
+    "h5py",
+]
+
+[project.scripts]
+panpe_train = "panpe:train"
+
+[tool.hatch.version]
+path = "panpe/package_info.py"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+addopts = "--doctest-modules panpe"
+
+[tool.hatch.build.targets.wheel]
+packages = ["panpe"]
+include = [
+    "configs/*",
+]

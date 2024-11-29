@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+import warnings
+
 from typing import Union, Optional
 
 from pathlib import Path
@@ -87,16 +89,18 @@ def init_simulator_from_config(config: Union[dict, str]):
 @load_config_if_needed
 def init_flow_from_config(
     config: Union[dict, str],
-    saved_models_dir: Optional[Path] = None,
+    folder_paths: Optional[dict] = None,
     simulator: Optional[simulator_module.Simulator] = None,
 ):
     """
     Initialize a flow from a config.
     """
+    if folder_paths is None:
+        folder_paths = get_paths_from_config(config)
     if simulator is None:
         simulator = init_simulator_from_config(config)
-    if saved_models_dir is None:
-        saved_models_dir = get_paths_from_config(config)["saved_models"]
+
+    device = config["general"]["device"]
 
     nn_config = config["nn"]
     embedding_net_conf = nn_config["embedding_net"]
@@ -117,7 +121,10 @@ def init_flow_from_config(
         phi_dim=phi_dim,
     )
     embedding_net = _load_pretrained_model(
-        embedding_net, embedding_net_conf.get("pretrained_name", None), saved_models_dir
+        embedding_net, 
+        embedding_net_conf.get("pretrained_name", None), 
+        folder_paths["saved_models"], 
+        device
     )
 
     flow_config = nn_config["flow"]
@@ -131,15 +138,22 @@ def init_flow_from_config(
         **flow_config,
     )
 
+    model_weights_loaded: bool = False
+
     if pretrained_name:
-        _load_pretrained_model(flow, pretrained_name, saved_models_dir)
+        _load_pretrained_model(flow, pretrained_name, folder_paths["saved_models"], device)
+        model_weights_loaded = True
     try:
         # try to load from the saved_models dir with the same name as the config
         _load_pretrained_model(
-            flow, "model_" + config["general"]["name"], saved_models_dir
+            flow, folder_paths["model"], folder_paths["saved_models"], device
         )
-    except (FileNotFoundError, RuntimeError):
-        pass
+        model_weights_loaded = True
+    except (FileNotFoundError, RuntimeError, KeyError) as err:
+        warnings.warn(f"Could not load model weights: {err}")
+
+    if not model_weights_loaded:
+        warnings.warn("No model weights loaded. Using random initialization.")
 
     device = config["general"]["device"]
     flow.to(device)
@@ -155,7 +169,7 @@ def init_trainer_from_config(config: Union[dict, str]) -> training_module.Traine
     folder_paths = get_paths_from_config(config, mkdir=True)
 
     simulator = init_simulator_from_config(config)
-    flow = init_flow_from_config(config, folder_paths["saved_models"], simulator)
+    flow = init_flow_from_config(config, folder_paths, simulator)
 
     train_conf = config["training"]
 
@@ -187,7 +201,7 @@ def init_inference_model_from_config(
     folder_paths = get_paths_from_config(config, mkdir=True)
 
     simulator = init_simulator_from_config(config)
-    flow = init_flow_from_config(config, folder_paths["saved_models"], simulator)
+    flow = init_flow_from_config(config, folder_paths, simulator)
     inference_model = inference_module.InferenceModel(simulator, flow)
 
     device = config["general"]["device"]
@@ -319,7 +333,7 @@ def init_callbacks_from_config(
 
 
 def _load_pretrained_model(
-    model, model_name: str, saved_models_dir: Path, verbose: bool = True
+    model, model_name: str, saved_models_dir: Path, device: str, verbose: bool = True
 ):
     if not model_name:
         return model
@@ -332,9 +346,9 @@ def _load_pretrained_model(
     if not model_path.is_file():
         raise FileNotFoundError(f"File {str(model_path)} does not exist.")
     try:
-        pretrained = torch.load(model_path)
+        pretrained = torch.load(model_path, map_location=device, weights_only=False)
     except Exception as err:
-        raise RuntimeError(f"Could not load model from {str(model_path)}") from err
+        raise RuntimeError(f"Could not load model from {str(model_path)}. Error: {err}") from err
     if "model" in pretrained:
         pretrained = pretrained["model"]
     try:
@@ -343,7 +357,7 @@ def _load_pretrained_model(
             print(f"Loaded model {model_name}")
     except Exception as err:
         raise RuntimeError(
-            f"Could not update state dict from {str(model_path)}"
+            f"Could not update state dict from {str(model_path)}. Error: {err}"
         ) from err
 
     return model

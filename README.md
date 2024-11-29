@@ -1,5 +1,5 @@
 
-# panpe
+# panpe-reflectometry
 ## Deep learning for Bayesian reflectometry analysis
 
 Code for the manuscript **"Fast and Reliable Probabilistic Reflectometry Inversion with Prior-Amortized Neural Posterior Estimation"** by
@@ -22,7 +22,18 @@ To install the package, clone the repository and run the following command in th
 pip install .
 ```
 
-Dependencies are listed in the `requirements.txt` file.
+The following dependencies are required and will be installed automatically:
+
+- numpy>=1.26.0
+- scipy>=1.11.3
+- torch>=2.1.0
+- nflows>=0.14
+- tqdm
+- PyYAML
+- click
+- pytest
+- matplotlib
+- h5py
 
 ### Training
 

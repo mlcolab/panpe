@@ -11,7 +11,7 @@ from panpe.inference.measured_data import MeasuredData
 
 
 class ExpDataset:
-    def __init__(self, h5path, device: str = "cuda"):
+    def __init__(self, h5path: str, device: str = "cuda"):
         self.h5path = h5path
         self.device = device
 

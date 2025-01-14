@@ -5,18 +5,22 @@ Code for the manuscript
 
 **Fast and Reliable Probabilistic Reflectometry Inversion with Prior-Amortized Neural Posterior Estimation** 
 
-by Vladimir Starostin<sup>a</sup>,
-Maximilian Dax<sup>b</sup>,
-Alexander Gerlach<sup>a</sup>, 
-Alexander Hinderhofer<sup>a</sup>, 
-Álvaro Tejero-Cantero<sup>a</sup>, 
-and Frank Schreiber<sup>a</sup>.
+by Vladimir Starostin<sup>1</sup>,
+Maximilian Dax<sup>2, 3, 4</sup>,
+Alexander Gerlach<sup>5</sup>, 
+Alexander Hinderhofer<sup>5</sup>, 
+Álvaro Tejero-Cantero<sup>1</sup>, 
+and Frank Schreiber<sup>5</sup>.
 
 
-*[a] University of Tübingen, 72076 Tübingen, Germany*  
-*[b] Max Planck Institute for Intelligent Systems, 72076 Tübingen, Germany*
+- *[1] University of Tübingen, Tübingen, Germany*
+- *[2] Max Planck Institute for Intelligent Systems Tübingen, Germany*
+- *[3] ETH Zurich, Zurich, Switzerland*
+- *[4] ELLIS Institute Tübingen, Tübingen, Germany*
+- *[5] Institute of Applied Physics, University of Tübingen, Tübingen, Germany.*
 
-(under review)
+
+Accepted for publication in Science Advances.
 
 ### Installation
 
@@ -48,6 +52,28 @@ pytest
 ```
 
 This will execute all tests, including doctests in the `panpe` package and tests in the `tests/functional` directory.
+
+
+### Inference
+
+To run inference, please refer to the [notebooks](notebooks) directory for examples of how to use the package for inference.
+
+```python
+# imports
+from panpe import InferenceModel, ExpDataset, ROOT_DIR
+
+# load the model
+model = InferenceModel.from_config("panpe-2layers-xrr")
+
+# load the experimental dataset (three datasets are concatenated together)
+exp_dset = ExpDataset(ROOT_DIR / "data/xrr_data.h5", device="cpu")
+
+# run inference
+res = model(exp_dset[200])
+
+# plot the results
+res.plot_sampled_profiles(show_prior=True)
+```
 
 
 ### Training from scratch

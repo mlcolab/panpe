@@ -6,18 +6,16 @@ Code for the manuscript
 **Fast and Reliable Probabilistic Reflectometry Inversion with Prior-Amortized Neural Posterior Estimation** 
 
 by Vladimir Starostin<sup>1</sup>,
-Maximilian Dax<sup>2, 3, 4</sup>,
-Alexander Gerlach<sup>5</sup>, 
-Alexander Hinderhofer<sup>5</sup>, 
+Maximilian Dax<sup>2</sup>,
+Alexander Gerlach<sup>3</sup>, 
+Alexander Hinderhofer<sup>3</sup>, 
 Álvaro Tejero-Cantero<sup>1</sup>, 
-and Frank Schreiber<sup>5</sup>.
+and Frank Schreiber<sup>3</sup>.
 
 
 - *[1] University of Tübingen, Tübingen, Germany*
 - *[2] Max Planck Institute for Intelligent Systems Tübingen, Germany*
-- *[3] ETH Zurich, Zurich, Switzerland*
-- *[4] ELLIS Institute Tübingen, Tübingen, Germany*
-- *[5] Institute of Applied Physics, University of Tübingen, Tübingen, Germany.*
+- *[3] Institute of Applied Physics, University of Tübingen, Tübingen, Germany.*
 
 
 Accepted for publication in Science Advances.
